@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useMessages } from '../../hooks/useMessages'
 import { Send, Loader2, Trash2, ArrowLeft } from 'lucide-react'
 import { formatTime, formatDate } from '../../utils/dateUtils'
-import axios from 'axios'
+import api from '../../lib/api'
 
 export default function ChatWindow({ currentUser, otherUser, token, onNewMessage }) {
   const { messages, loading, sendMessage } = useMessages(
@@ -37,7 +37,7 @@ export default function ChatWindow({ currentUser, otherUser, token, onNewMessage
   const handleDelete = async (msgId) => {
     if (!confirm('Supprimer ce message ?')) return
     try {
-      await axios.delete(`/api/messages/${msgId}`)
+      await api.delete(`/api/messages/${msgId}`)
     } catch (err) {
       console.error(err)
     }

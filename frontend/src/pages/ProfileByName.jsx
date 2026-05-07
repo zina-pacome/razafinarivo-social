@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../lib/api' 
 import { Loader2 } from 'lucide-react'
 
 export default function ProfileByName() {
@@ -12,7 +12,7 @@ export default function ProfileByName() {
       try {
         const nomDecoded = decodeURIComponent(nom)
         console.log('Finding profile by name:', nomDecoded)
-        const { data } = await axios.get(
+        const { data } = await api.get(
           `/api/users/by-name/${encodeURIComponent(nomDecoded)}`
         )
         navigate(`/profile/${data.id}`, { replace: true })

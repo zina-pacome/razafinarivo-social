@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
-import axios from 'axios'
+import api from '../lib/api' 
 import { Image, X, Send, Loader2 } from 'lucide-react'
 
 export default function CreatePost({ onPostCreated }) {
@@ -33,7 +33,7 @@ export default function CreatePost({ onPostCreated }) {
       formData.append('contenu', contenu)
       if (image) formData.append('image', image)
 
-      const { data } = await axios.post('/api/posts', formData, {
+      const { data } = await api.post('/api/posts', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
       onPostCreated(data)

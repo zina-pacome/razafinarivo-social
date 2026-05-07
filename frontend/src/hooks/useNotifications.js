@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import axios from 'axios'
+import api from '../lib/api' 
 
 export const useNotifications = (userId, token) => {
   const [count, setCount] = useState(0)
@@ -9,7 +9,7 @@ export const useNotifications = (userId, token) => {
   const fetchCount = async () => {
     if (!token) return
     try {
-      const { data } = await axios.get('/api/notifications/count')
+      const { data } = await api.get('/api/notifications/count')
       setCount(data.count || 0)
     } catch {}
   }
@@ -17,14 +17,14 @@ export const useNotifications = (userId, token) => {
   const fetchAll = async () => {
     if (!token) return
     try {
-      const { data } = await axios.get('/api/notifications')
+      const { data } = await api.get('/api/notifications')
       setNotifications(data)
     } catch {}
   }
 
   const markAllRead = async () => {
     try {
-      await axios.patch('/api/notifications/read-all')
+      await api.patch('/api/notifications/read-all')
       setCount(0)
       setNotifications(prev => prev.map(n => ({ ...n, lu: true })))
     } catch {}

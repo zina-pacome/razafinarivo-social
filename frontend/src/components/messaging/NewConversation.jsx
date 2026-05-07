@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../../lib/api'
 import { Search, Loader2, X } from 'lucide-react'
 
 export default function NewConversation({ onSelect, onCancel }) {
@@ -24,7 +24,7 @@ export default function NewConversation({ onSelect, onCancel }) {
 
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get('/api/messages/users')
+      const { data } = await api.get('/api/messages/users')
       setUsers(data)
       setFiltered(data)
     } catch (err) {

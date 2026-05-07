@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import api from '../lib/api' 
 import {
   MoreHorizontal, Trash2, Edit3, MessageCircle,
   ChevronDown, ChevronUp, Loader2
@@ -27,7 +27,7 @@ export default function PostCard({ post, onDeleted, onUpdated }) {
   const handleDelete = async () => {
     if (!confirm('Supprimer ce post ?')) return
     try {
-      await axios.delete(`/api/posts/${post.id}`)
+      await api.delete(`/api/posts/${post.id}`)
       onDeleted(post.id)
     } catch (err) {
       console.error(err)
@@ -38,7 +38,7 @@ export default function PostCard({ post, onDeleted, onUpdated }) {
     if (!editContent.trim()) return
     setLoading(true)
     try {
-      const { data } = await axios.put(`/api/posts/${post.id}`, { contenu: editContent })
+      const { data } = await api.put(`/api/posts/${post.id}`, { contenu: editContent })
       onUpdated({ ...post, ...data })
       setEditing(false)
     } catch (err) {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import axios from 'axios'
+import api from '../lib/api' 
 import { ThumbsUp, X } from 'lucide-react'
 
 const REACTIONS = [
@@ -40,7 +40,7 @@ export default function ReactionBar({ postId, commentId, initialReactions, curre
       if (postId) payload.post_id = postId
       if (commentId) payload.comment_id = commentId
 
-      const { data } = await axios.post('/api/reactions', payload)
+      const { data } = await api.post('/api/reactions', payload)
 
       if (data.action === 'removed') {
         setReactions(prev => prev.filter(r => r.user_id !== currentUserId))
@@ -67,7 +67,7 @@ export default function ReactionBar({ postId, commentId, initialReactions, curre
     setLoadingReactors(true)
     try {
       const param = postId ? `post_id=${postId}` : `comment_id=${commentId}`
-      const { data } = await axios.get(`/api/reactions/detail?${param}`)
+      const { data } = await api.get(`/api/reactions/detail?${param}`)
       setReactorsDetail(data)
     } catch {}
     finally { setLoadingReactors(false) }

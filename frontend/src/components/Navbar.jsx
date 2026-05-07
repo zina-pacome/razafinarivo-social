@@ -6,7 +6,7 @@ import {
   Home, MessageCircle, User, LogOut,
   Shield, Search, X
 } from 'lucide-react'
-import axios from 'axios'
+import api from '../lib/api' 
 import NotificationBell from './NotificationBell'
 import LogoutModal from './LogoutModal'
 
@@ -43,7 +43,7 @@ export default function Navbar() {
     const timer = setTimeout(async () => {
       setSearching(true)
       try {
-        const { data } = await axios.get(
+        const { data } = await api.get(
           `/api/search?q=${encodeURIComponent(search)}`
         )
         setResults(data)

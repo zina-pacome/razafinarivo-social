@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import axios from 'axios'
+import api from '../lib/api' 
 import {
   Camera, Edit3, Save, X, Calendar,
   MessageCircle, Loader2, Settings,
@@ -40,7 +40,7 @@ export default function Profile() {
 
   const fetchProfile = async () => {
     try {
-      const { data } = await axios.get(`/api/users/${id}`)
+      const { data } = await api.get(`/api/users/${id}`)
       setProfile(data)
       setEditForm({ nom: data.nom, bio: data.bio || '' })
     } catch (err) {
@@ -52,7 +52,7 @@ export default function Profile() {
 
   const fetchUserPosts = async () => {
     try {
-      const { data } = await axios.get(`/api/users/${id}/posts`)
+      const { data } = await api.get(`/api/users/${id}/posts`)
       setPosts(data)
     } catch (err) {
       console.error(err)
@@ -73,7 +73,7 @@ export default function Profile() {
     try {
       const formData = new FormData()
       formData.append('cover', file)
-      const { data } = await axios.put('/api/users/cover', formData, {
+      const { data } = await api.put('/api/users/cover', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
       setProfile(prev => ({ ...prev, photo_couverture: data.photo_couverture }))
@@ -93,7 +93,7 @@ export default function Profile() {
       formData.append('bio', editForm.bio)
       if (avatarFile) formData.append('avatar', avatarFile)
 
-      const { data } = await axios.put('/api/users/profile', formData, {
+      const { data } = await api.put('/api/users/profile', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
       setProfile(prev => ({ ...prev, ...data }))
@@ -428,7 +428,7 @@ function SettingsPanel({ profile, onUpdated }) {
         payload.nouveau_mdp = form.nouveau_mdp
       }
 
-      const { data } = await axios.put('/api/users/settings', payload)
+      const { data } = await api.put('/api/users/settings', payload)
       onUpdated(data.user)
       setSuccess(data.message)
 
@@ -708,7 +708,7 @@ function SettingsPanel({ profile, onUpdated }) {
         <button
           onClick={() => {
             if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
-              axios.delete('/api/users/account').then(() => {
+              api.delete('/api/users/account').then(() => {
                 window.location.href = '/login'
               })
             }

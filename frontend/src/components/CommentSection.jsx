@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import api from '../lib/api' 
 import {
   Send, Trash2, Edit3, Loader2,
   CornerDownRight, ChevronDown, ChevronUp
@@ -21,7 +21,7 @@ export default function CommentSection({ postId, onCountChange }) {
 
   const fetchComments = async () => {
     try {
-      const { data } = await axios.get(`/api/posts/${postId}/commentaires`)
+      const { data } = await api.get(`/api/posts/${postId}/commentaires`)
       setComments(data)
       const total = countAll(data)
       onCountChange(total)
@@ -57,7 +57,7 @@ export default function CommentSection({ postId, onCountChange }) {
 
   const handleDelete = async (commentId) => {
     if (!confirm('Supprimer ce commentaire ?')) return
-    await axios.delete(`/api/commentaires/${commentId}`)
+    await api.delete(`/api/commentaires/${commentId}`)
     setComments(prev => removeNode(prev, commentId))
     onCountChange(c => c - 1)
   }
@@ -67,7 +67,7 @@ export default function CommentSection({ postId, onCountChange }) {
          .map(n => ({ ...n, replies: removeNode(n.replies || [], id) }))
 
   const handleUpdate = async (commentId) => {
-    const { data } = await axios.put(`/api/commentaires/${commentId}`, {
+    const { data } = await api.put(`/api/commentaires/${commentId}`, {
       contenu: editContent
     })
     setComments(prev => updateNode(prev, commentId, data.contenu))
@@ -320,7 +320,7 @@ function CommentInput({ postId, parentId, currentUser, onSubmit, placeholder, au
     if (match) {
       setMentionQuery(match[1])
       try {
-        const { data } = await axios.get(`/api/users/mentions?q=${match[1]}`)
+        const { data } = await api.get(`/api/users/mentions?q=${match[1]}`)
         setMentionResults(data)
       } catch {}
     } else {
@@ -344,7 +344,7 @@ function CommentInput({ postId, parentId, currentUser, onSubmit, placeholder, au
     if (!value.trim() || submitting) return
     setSubmitting(true)
     try {
-      const { data } = await axios.post(`/api/posts/${postId}/commentaires`, {
+      const { data } = await api.post(`/api/posts/${postId}/commentaires`, {
         contenu: value,
         parent_id: parentId || null,
         mentions: mentions.map(m => m.id)
