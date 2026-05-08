@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../lib/api' 
 import PostCard from '../components/PostCard'
 import CreatePost from '../components/CreatePost'
 import { Loader2, Newspaper } from 'lucide-react'
@@ -14,12 +14,14 @@ export default function Feed() {
   const fetchPosts = async (p = 1) => {
     try {
       if (p > 1) setLoadingMore(true)
-      const { data } = await axios.get(`/api/posts?page=${p}`)
-      if (p === 1) setPosts(data)
-      else setPosts(prev => [...prev, ...data])
-      setHasMore(data.length === 10)
+      const { data } = await api.get(`/api/posts?page=${p}`)
+      const posts = Array.isArray(data) ? data : []
+      if (p === 1) setPosts(posts)
+      else setPosts(prev => [...prev, ...posts])
+      setHasMore(posts.length === 10)
     } catch (err) {
-      console.error(err)
+      console.error('fetchPosts error:', err)
+      setPosts([])
     } finally {
       setLoading(false)
       setLoadingMore(false)

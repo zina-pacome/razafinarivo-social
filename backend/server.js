@@ -33,3 +33,11 @@ const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
   console.log(`🚀 Serveur Razafinarivo démarré sur le port ${PORT}`)
 })
+// Keep-alive pour Render
+const keepAlive = require('./src/keepalive')
+keepAlive()
+
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => {
+  console.log(`🚀 Serveur Razafinarivo démarré sur le port ${PORT}`)
+})

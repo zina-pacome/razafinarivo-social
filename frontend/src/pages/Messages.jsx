@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import axios from 'axios'
+import api from '../lib/api' 
 import ConversationList from '../components/messaging/ConversationList'
 import ChatWindow from '../components/messaging/ChatWindow'
 import NewConversation from '../components/messaging/NewConversation'
@@ -28,18 +28,18 @@ export default function Messages() {
 
   const fetchConversations = async () => {
     try {
-      const { data } = await axios.get('/api/messages/conversations')
-      setConversations(data)
+      const { data } = await api.get('/api/messages/conversations')
+      setConversations(Array.isArray(data) ? data : [])
     } catch (err) {
       console.error(err)
+      setConversations([])
     } finally {
       setLoading(false)
     }
   }
-
   const fetchUserInfo = async (id) => {
     try {
-      const { data } = await axios.get('/api/messages/users')
+      const { data } = await api.get('/api/messages/users')
       const found = data.find(u => u.id === id)
       if (found) setSelectedUser(found)
     } catch (err) {

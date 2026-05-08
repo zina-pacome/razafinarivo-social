@@ -25,15 +25,17 @@ export default function NewConversation({ onSelect, onCancel }) {
   const fetchUsers = async () => {
     try {
       const { data } = await api.get('/api/messages/users')
-      setUsers(data)
-      setFiltered(data)
+      const users = Array.isArray(data) ? data : []
+      setUsers(users)
+      setFiltered(users)
     } catch (err) {
       console.error(err)
+      setUsers([])
+      setFiltered([])
     } finally {
       setLoading(false)
     }
   }
-
   return (
     <div className="flex flex-col h-full">
       {/* Header */}

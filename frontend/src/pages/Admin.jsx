@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../lib/api' 
 import {
   Users, CheckCircle, XCircle, Trash2,
   Shield, Clock, UserCheck, UserX, Loader2,
@@ -22,10 +22,11 @@ export default function Admin() {
 
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get('/api/admin/users')
-      setUsers(data)
+      const { data } = await api.get('/api/admin/users')
+      setUsers(Array.isArray(data) ? data : [])
     } catch (err) {
       console.error(err)
+      setUsers([])
     } finally {
       setLoading(false)
     }
@@ -34,7 +35,7 @@ export default function Admin() {
   const handleStatut = async (userId, statut) => {
     setActionLoading(userId + statut)
     try {
-      await axios.patch(`/api/admin/users/${userId}/statut`, { statut })
+      await api.patch(`/api/admin/users/${userId}/statut`, { statut })
       setUsers(prev => prev.map(u =>
         u.id === userId ? { ...u, statut } : u
       ))
@@ -49,7 +50,7 @@ export default function Admin() {
     if (!confirm('Supprimer définitivement cet utilisateur ?')) return
     setActionLoading(userId + 'delete')
     try {
-      await axios.delete(`/api/admin/users/${userId}`)
+      await api.delete(`/api/admin/users/${userId}`)
       setUsers(prev => prev.filter(u => u.id !== userId))
     } catch (err) {
       console.error(err)

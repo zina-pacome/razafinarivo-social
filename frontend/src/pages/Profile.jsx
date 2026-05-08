@@ -53,9 +53,10 @@ export default function Profile() {
   const fetchUserPosts = async () => {
     try {
       const { data } = await api.get(`/api/users/${id}/posts`)
-      setPosts(data)
+      setPosts(Array.isArray(data) ? data : [])
     } catch (err) {
       console.error(err)
+      setPosts([])
     }
   }
 

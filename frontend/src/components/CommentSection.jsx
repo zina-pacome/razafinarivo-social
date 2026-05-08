@@ -22,11 +22,12 @@ export default function CommentSection({ postId, onCountChange }) {
   const fetchComments = async () => {
     try {
       const { data } = await api.get(`/api/posts/${postId}/commentaires`)
-      setComments(data)
-      const total = countAll(data)
-      onCountChange(total)
+      const comments = Array.isArray(data) ? data : []
+      setComments(comments)
+      onCountChange(countAll(comments))
     } catch (err) {
       console.error(err)
+      setComments([])
     } finally {
       setLoading(false)
     }
